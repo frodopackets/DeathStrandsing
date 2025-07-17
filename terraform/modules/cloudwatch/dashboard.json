@@ -1,0 +1,209 @@
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/Lambda", "Invocations", "FunctionName", "${lambda_function_name}"],
+          [".", "Errors", ".", "."],
+          [".", "Duration", ".", "."],
+          [".", "Throttles", ".", "."],
+          [".", "ConcurrentExecutions", ".", "."]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${aws_region}",
+        "title": "Lambda Function Performance",
+        "period": 300,
+        "stat": "Average",
+        "yAxis": {
+          "left": {
+            "min": 0
+          }
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["${custom_metrics_namespace}", "ErrorCount"],
+          [".", "SuccessCount"],
+          [".", "ArticlesProcessed"]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${aws_region}",
+        "title": "Application Metrics",
+        "period": 300,
+        "stat": "Sum",
+        "yAxis": {
+          "left": {
+            "min": 0
+          }
+        }
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 6,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/SNS", "NumberOfMessagesPublished", "TopicName", "${sns_topic_name}"],
+          [".", "NumberOfMessagesFailed", ".", "."],
+          [".", "NumberOfNotificationsDelivered", ".", "."],
+          [".", "NumberOfNotificationsFailed", ".", "."]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${aws_region}",
+        "title": "SNS Message Delivery",
+        "period": 300,
+        "stat": "Sum"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 8,
+      "y": 6,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/Events", "SuccessfulInvocations", "RuleName", "${eventbridge_rule_name}"],
+          [".", "FailedInvocations", ".", "."]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${aws_region}",
+        "title": "EventBridge Scheduler",
+        "period": 300,
+        "stat": "Sum"
+      }
+    },
+    {
+      "type": "metric",
+      "x": 16,
+      "y": 6,
+      "width": 8,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          ["AWS/Lambda", "Duration", "FunctionName", "${lambda_function_name}"],
+          [".", "MemoryUtilization", ".", "."]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "${aws_region}",
+        "title": "Resource Utilization",
+        "period": 300,
+        "stat": "Average"
+      }
+    },
+    {
+      "type": "log",
+      "x": 0,
+      "y": 12,
+      "width": 24,
+      "height": 6,
+      "properties": {
+        "query": "SOURCE '${log_group_name}' | fields @timestamp, @message, @requestId\n| filter @message like /ERROR/\n| sort @timestamp desc\n| limit 50",
+        "region": "${aws_region}",
+        "title": "Recent Errors",
+        "view": "table"
+      }
+    },
+    {
+      "type": "log",
+      "x": 0,
+      "y": 18,
+      "width": 24,
+      "height": 6,
+      "properties": {
+        "query": "SOURCE '${log_group_name}' | fields @timestamp, @message, @requestId\n| filter @message like /SUCCESS/\n| sort @timestamp desc\n| limit 20",
+        "region": "${aws_region}",
+        "title": "Recent Successful Executions",
+        "view": "table"
+      }
+    },
+    {
+      "type": "number",
+      "x": 0,
+      "y": 24,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          ["${custom_metrics_namespace}", "SuccessCount"]
+        ],
+        "view": "singleValue",
+        "region": "${aws_region}",
+        "title": "Total Successful Runs (24h)",
+        "period": 86400,
+        "stat": "Sum"
+      }
+    },
+    {
+      "type": "number",
+      "x": 6,
+      "y": 24,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          ["${custom_metrics_namespace}", "ErrorCount"]
+        ],
+        "view": "singleValue",
+        "region": "${aws_region}",
+        "title": "Total Errors (24h)",
+        "period": 86400,
+        "stat": "Sum"
+      }
+    },
+    {
+      "type": "number",
+      "x": 12,
+      "y": 24,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          ["${custom_metrics_namespace}", "ArticlesProcessed"]
+        ],
+        "view": "singleValue",
+        "region": "${aws_region}",
+        "title": "Articles Processed (24h)",
+        "period": 86400,
+        "stat": "Sum"
+      }
+    },
+    {
+      "type": "number",
+      "x": 18,
+      "y": 24,
+      "width": 6,
+      "height": 3,
+      "properties": {
+        "metrics": [
+          ["AWS/Lambda", "Duration", "FunctionName", "${lambda_function_name}"]
+        ],
+        "view": "singleValue",
+        "region": "${aws_region}",
+        "title": "Avg Duration (24h)",
+        "period": 86400,
+        "stat": "Average"
+      }
+    }
+  ]
+}
